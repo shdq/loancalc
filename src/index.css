@@ -1,0 +1,198 @@
+/* Calculator component */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+.calculator {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  width: 100%;
+}
+.input-group {}
+.output-group {}
+
+/* InputRange component */
+.input-field {}
+.input-field__description {}
+.input-field__range-value {
+  font-size: 22px;
+}
+.input-field__range {}
+.input-field__label {}
+.input-field__label-value {}
+.input-field__label-value_min {}
+.input-field__label-value_max {
+  float: right;
+}
+/* InterestRateInput component */
+.interest-rate {}
+.interest-rate__checkbox {}
+.interest-rate__label {}
+
+/* OutputEntity component */
+.output-field {}
+.output-field__description {}
+.output-field__value {
+  font-size: 22px;
+}
+
+.tooltip {}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  background-color: #0a6586;
+  padding: 0;
+  cursor: pointer;
+}
+input[type=range]:focus {
+  outline: 0;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #e76f51;
+  border: 3px solid #e76f51;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-thumb:hover, input[type='range']::-webkit-slider-thumb:active {
+  background-color: #e76f51;
+  transition: all 500ms ease-in-out;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 3px;
+  background-color: #0a6586;
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  background-color: #e76f51;
+  border: 3px solid #e76f51;
+  width: 18px;
+  height: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+input[type='range']::-moz-range-thumb:hover, input[type='range']::-moz-range-thumb:active {
+  background-color: #e76f51;
+  transition: all 500ms ease-in-out;
+}
+
+input[type="range"]::-ms-fill-lower,
+input[type="range"]::-ms-fill-upper {
+  background: transparent;
+}
+input[type="range"]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  /* Hides the slider so custom styles can be added */
+  padding: 10px 0;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+
+  height: 10px;
+  padding: 0;
+}
+input[type="range"]::-ms-thumb {
+  background-color: #e76f51;
+  border: 2px solid #e76f51;
+  width: 10px;
+  height: 20px;
+  cursor: pointer;
+}
+input[type="range"]::-ms-ticks-after { display: none;}
+input[type="range"]::-ms-ticks-before { display: none;}
+
+label {
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+label {
+  cursor: pointer;
+}
+input[type="checkbox"] + label:before {
+  border: 2px solid #0a6586;
+  content: "\00a0";
+  display: inline-block;
+  font: 16px/1em sans-serif;
+  font-weight: bold;
+  height: 16px;
+  margin: 0 0.5em 0 0;
+  padding:0;
+  vertical-align: top;
+  width: 16px;
+}
+input[type="checkbox"]:checked + label:before {
+  background: #fff;
+  color: #e76f51;
+  content: "\2713";
+  text-align: center;
+}
+
+/* Add this attribute to the element that needs a tooltip */
+[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Position tooltip above the element */
+[data-tooltip]:before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 160px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid #000;
+  border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+/* Show tooltip content on hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {RadioGroup, Radio} from 'react-radio-group'
 import FontAwesome  from 'react-fontawesome';
 import './font-awesome-4.7.0/css/font-awesome.min.css';
 import './index.css';
@@ -45,31 +46,61 @@ class InputRange extends React.Component {
   }
 }
 
-class InterestRateInput extends React.Component {
+// class InterestRateInput extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.handleChange = this.handleChange.bind(this);
+//   }
+//   handleChange(e) {
+//     this.props.onValueChange(e.target.checked);
+//   }
+//   render () {
+//     return(
+//       <div className="interest-rate">
+//           <input className="interest-rate__checkbox"
+//             type="checkbox"
+//             id="interestRate"
+//             name="lowerInterestRate"
+//             onChange={this.handleChange}
+//           />
+//           <label className="interest-rate__label" htmlFor="interestRate">
+//             Льготная ставка&nbsp;
+//               <span className="tooltip" data-tooltip="Для программ с сниженной процентной ставкой">
+//                 <FontAwesome name="question-circle-o" />
+//               </span>
+//           </label>
+//
+//       </div>
+//     )
+//   }
+// }
+
+class InterestRateRadio extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(e) {
-    this.props.onValueChange(e.target.checked);
+    // this.props.onValueChange(e.target.value);
   }
-  render () {
-    return(
-      <div className="interest-rate">
-          <input className="interest-rate__checkbox"
-            type="checkbox"
-            id="interestRate"
-            name="lowerInterestRate"
-            onChange={this.handleChange}
-          />
-          <label className="interest-rate__label" htmlFor="interestRate">
-            Льготная ставка&nbsp;
-              <span className="tooltip" data-tooltip="Для программ с сниженной процентной ставкой">
-                <FontAwesome name="question-circle-o" />
-              </span>
-          </label>
-
-      </div>
+  render() {
+    return (
+      <span className="interest-rate">
+       <input className="interest-rate__checkbox"
+         type="radio"
+         // id="InterestRateRadio"
+         name="interestRate"
+         defaultChecked
+         // onChange={this.handleChange}
+         value={this.props.value}
+       />
+       <label className="interest-rate__label" htmlFor="InterestRateRadio">
+         {this.props.label}&nbsp;
+           <span className="tooltip" data-tooltip={this.props.tooltip}>
+             <FontAwesome name="question-circle-o" />
+           </span>
+       </label>
+     </span>
     )
   }
 }
@@ -93,12 +124,13 @@ class Calculator extends React.Component {
     this.handleSumChange = this.handleSumChange.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.handleGraceChange = this.handleGraceChange.bind(this);
-    this.handleInterestRateInputChange = this.handleInterestRateInputChange.bind(this);
+    // this.handleInterestRateInputChange = this.handleInterestRateInputChange.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
     this.state = {
       loanSum: {
         value: 500000,
         minValue: 100000,
-        maxValue: 5000000,
+        maxValue: 3000000,
       },
       loanTerm: {
         value: 36,
@@ -108,13 +140,14 @@ class Calculator extends React.Component {
       gracePeriod: {
         value: 0,
         minValue: 0,
-        maxValue: 18,
+        maxValue: 35,
       },
-      interestRate: 10,
+      interestRate: 9,
+      selectedValue: '9',
       outputData: {
-        monthlyPayment: 16133.59,
+        monthlyPayment: 15899.87,
         gracePeriod: 0,
-        gracePayment: 4166.67,
+        gracePayment: 3750,
         requirements: 'Поручительства физических или юридических лиц'
       }
     }
@@ -125,7 +158,7 @@ class Calculator extends React.Component {
       loanSum: {
         value: loanSum,
         minValue: 100000,
-        maxValue: 5000000,
+        maxValue: 3000000,
       },
     });
     this.Calculate(this.state.interestRate, loanSum, this.state.loanTerm.value,
@@ -133,16 +166,14 @@ class Calculator extends React.Component {
   }
 
   handleTermChange(loanTerm) {
-    const graceMaxValue = (loanTerm - (loanTerm % 2)) / 2;
-    const graceValue = (this.state.gracePeriod.value<graceMaxValue) ?
-      this.state.gracePeriod.value :
-      graceMaxValue;
+    const graceMaxValue = loanTerm - 1;//(loanTerm - (loanTerm % 2)) / 2;
+    const graceValue = (this.state.gracePeriod.value<graceMaxValue) ? this.state.gracePeriod.value : graceMaxValue;
 
     this.setState({
       loanTerm: {
         value: loanTerm,
         minValue: 3,
-        maxValue: 36,
+        maxValue: this.state.loanTerm.maxValue,
       },
       gracePeriod: {
         value: graceValue,
@@ -166,7 +197,42 @@ class Calculator extends React.Component {
       this.state.loanTerm.value, gracePeriod);
   }
 
-  handleInterestRateInputChange(lowerInterestRate) {
+  handleRadioChange(value) {
+    let interestRate = value;
+    let loanTerm = this.state.loanTerm.value;
+    let maxLoanTerm = 36;
+    let graceMaxValue = loanTerm - 1;
+    let graceValue = (this.state.gracePeriod.value < graceMaxValue) ? this.state.gracePeriod.value : graceMaxValue;
+    if(value==="s+") {
+      interestRate = 7;
+      maxLoanTerm = 12;
+      if(loanTerm > 12) {
+        loanTerm = 12;
+        if(graceValue > 11){
+            graceValue = 11;
+        }
+      }
+      graceMaxValue = loanTerm - 1;
+    }
+    this.setState({
+        selectedValue: value,
+        interestRate: interestRate,
+        loanTerm: {
+          value: loanTerm,
+          minValue: 3,
+          maxValue: maxLoanTerm,
+        },
+        gracePeriod: {
+          value: graceValue,
+          minValue: 0,
+          maxValue: graceMaxValue,
+        }
+      });
+    this.Calculate(interestRate, this.state.loanSum.value, loanTerm,
+        graceValue);
+  }
+
+  /*handleInterestRateInputChange(lowerInterestRate) {
     let interest = null;
     if(lowerInterestRate) {
       interest = 7;
@@ -174,14 +240,14 @@ class Calculator extends React.Component {
         interestRate: 7,
       });
     } else {
-      interest = 10;
+      interest = 9;
       this.setState({
-        interestRate: 10,
+        interestRate: 9,
       });
     }
     this.Calculate(interest, this.state.loanSum.value,
       this.state.loanTerm.value, this.state.gracePeriod.value);
-  }
+  }*/
 
   Calculate(interest, sum, term, grace) {
     const monthlyInterest = interest/100/12;
@@ -251,14 +317,43 @@ class Calculator extends React.Component {
             unit="мес."
             step="1"
             desc="Льготный период"
-            tooltip="Период, не более половины срока займа, в котором уплачиваются только проценты."
+            tooltip="Период, в котором уплачиваются только проценты."
           />
-          <InterestRateInput
+          {/*<InterestRateInput
             lowerInterestRate="false"
             onValueChange={this.handleInterestRateInputChange}
-          />
+          />*/}
+          <div className="input-field">
+          <p className="input-field__description">Программы фонда для разных категорий предпринимателей:</p>
+          <RadioGroup className="interest-rate-radio"
+            name="interestRateRadio"
+            selectedValue={this.state.selectedValue}
+            onChange={this.handleRadioChange}>
+            <label className="interest-rate-radio__label">
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '9'} value="9" />«Стандарт»
+              <span className="interest-rate-radio__checkmark"></span>
+            </label>
+            <label className="interest-rate-radio__label">
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '8'} value="8" />«Местный товаропроизводитель»
+              <span className="interest-rate-radio__checkmark"></span>
+            </label>
+            <label className="interest-rate-radio__label">
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '7'} value="7" />«Арктика – МСП», «Моногород – МСП», «Сельский туризм», «Сельхозпроизводитель»
+              <span className="interest-rate-radio__checkmark"></span>
+            </label>
+            <label className="interest-rate-radio__label">
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === 's+'} value="s+" />«Startup+»
+              <span className="interest-rate-radio__checkmark"></span>
+            </label>
+          </RadioGroup>
+          </div>
         </div>
         <div className="output-group">
+          <OutputEntity
+            title="Годовая ставка"
+            value={this.state.interestRate}
+            unit="%"
+          />
           <OutputEntity
             title="Ежемесячный платеж"
             value={this.state.outputData.monthlyPayment}
@@ -266,16 +361,12 @@ class Calculator extends React.Component {
           />
           {gracePeriodLabel}
           <OutputEntity
-            title="Годовая ставка"
-            value={this.state.interestRate}
-            unit="%"
-          />
-          <OutputEntity
             title="Требования к заемщику"
             value={this.state.outputData.requirements}
           />
         </div>
       </div>
+
     )
   }
 }

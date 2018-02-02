@@ -6,9 +6,10 @@
     "react-scripts": "1.0.10"
   },
   "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-fontawesome": "^1.6.1"
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-fontawesome": "^1.6.1",
+    "react-radio-group": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

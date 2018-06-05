@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "1.0.10"
+    "react-scripts": "^1.1.4"
   },
   "dependencies": {
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
     "react-fontawesome": "^1.6.1",
     "react-radio-group": "^3.0.2"
   },

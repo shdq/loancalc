@@ -5,6 +5,13 @@ import FontAwesome  from 'react-fontawesome';
 import './font-awesome-4.7.0/css/font-awesome.min.css';
 import './index.css';
 
+const element = document.getElementsByClassName('key-interest-rate__value');
+let keyInterestRate = element[0].dataset.value;
+if(isNaN(keyInterestRate)) {
+  keyInterestRate = 8;
+  console.error('Key interest rate is not a number');
+}
+
 class InputRange extends React.Component {
   constructor(props) {
     super(props);
@@ -142,8 +149,8 @@ class Calculator extends React.Component {
         minValue: 0,
         maxValue: 35,
       },
-      interestRate: 9,
-      selectedValue: '9',
+      interestRate: keyInterestRate,
+      selectedValue: '0', // default reduction factor
       outputData: {
         monthlyPayment: 15899.87,
         gracePeriod: 0,
@@ -198,13 +205,13 @@ class Calculator extends React.Component {
   }
 
   handleRadioChange(value) {
-    let interestRate = value;
+    let interestRate = keyInterestRate - value;
     let loanTerm = this.state.loanTerm.value;
     let maxLoanTerm = 36;
     let graceMaxValue = loanTerm - 1;
     let graceValue = (this.state.gracePeriod.value < graceMaxValue) ? this.state.gracePeriod.value : graceMaxValue;
     if(value==="s+") {
-      interestRate = 7;
+      interestRate = keyInterestRate - 0.5;
       maxLoanTerm = 12;
       if(loanTerm > 12) {
         loanTerm = 12;
@@ -330,15 +337,15 @@ class Calculator extends React.Component {
             selectedValue={this.state.selectedValue}
             onChange={this.handleRadioChange}>
             <label className="interest-rate-radio__label">
-              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '9'} value="9" />«Стандарт»
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '0'} value="0" />«Стандарт»
               <span className="interest-rate-radio__checkmark"></span>
             </label>
             <label className="interest-rate-radio__label">
-              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '8'} value="8" />«Местный товаропроизводитель»
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '0.5'} value="0.5" />«Сельхозпроизводитель»
               <span className="interest-rate-radio__checkmark"></span>
             </label>
             <label className="interest-rate-radio__label">
-              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '7'} value="7" />«Арктика – МСП», «Моногород – МСП», «Сельский туризм», «Сельхозпроизводитель»
+              <Radio className="interest-rate-radio__input" checked={this.state.selectedValue === '0.25'} value="0.25" />«Арктика», «Лизинг», «Местный товаропроизводитель», «Моногород», «Сельский туризм»
               <span className="interest-rate-radio__checkmark"></span>
             </label>
             <label className="interest-rate-radio__label">
@@ -353,6 +360,11 @@ class Calculator extends React.Component {
             title="Годовая ставка"
             value={this.state.interestRate}
             unit="%"
+          />
+          <OutputEntity
+            title="Максимальный срок"
+            value={this.state.loanTerm.maxValue}
+            unit="мес."
           />
           <OutputEntity
             title="Ежемесячный платеж"

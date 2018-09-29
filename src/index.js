@@ -27,11 +27,12 @@ class InputRange extends React.Component {
         &nbsp;<FontAwesome name="question-circle-o" />
       </span>;
     }
+    let value = Number(this.props.field.value).toLocaleString('ru-RU');
     return(
       <div className="input-field">
         <p className="input-field__description">{this.props.desc}{tooltip}&nbsp;
           <span className="input-field__range-value">
-            {this.props.field.value} {this.props.unit}
+            {value} {this.props.unit}
           </span>
         </p>
         <input className="input-field__range"
@@ -44,9 +45,9 @@ class InputRange extends React.Component {
         />
         <p className="input-field__label">
           <span className="input-field__label-value input-field__label-value_min">
-            {this.props.field.minValue}</span>
+            {this.props.field.minValue.toLocaleString('ru-RU')}</span>
           <span className="input-field__label-value input-field__label-value_max">
-            {this.props.field.maxValue}</span>
+            {this.props.field.maxValue.toLocaleString('ru-RU')}</span>
         </p>
       </div>
     )
@@ -152,9 +153,9 @@ class Calculator extends React.Component {
       interestRate: keyInterestRate,
       selectedValue: '0', // default reduction factor
       outputData: {
-        monthlyPayment: 15899.87,
+        monthlyPayment: 15495.76,
         gracePeriod: 0,
-        gracePayment: 3750,
+        // gracePayment: 3020.83,
         requirements: 'Поручительства физических или юридических лиц'
       }
     }
@@ -298,8 +299,8 @@ class Calculator extends React.Component {
           gracePeriodLabel =
             <OutputEntity
               title="Платеж в льготный период"
-              value={this.state.outputData.gracePayment}
-              unit="руб."
+              value={Number(this.state.outputData.gracePayment).toLocaleString('ru-RU')}
+              unit="&#8381;" // Ruble symbol
             />
         }
     return (
@@ -307,8 +308,8 @@ class Calculator extends React.Component {
         <div className="input-group">
           <InputRange field={loanSum}
             onValueChange={this.handleSumChange}
-            unit="руб."
-            step="100000"
+            unit="&#8381;" // Ruble symbol
+            step="50000"
             desc="Сумма займа"
           />
           <InputRange
@@ -358,7 +359,7 @@ class Calculator extends React.Component {
         <div className="output-group">
           <OutputEntity
             title="Годовая ставка"
-            value={this.state.interestRate}
+            value={Number(this.state.interestRate).toLocaleString('ru-RU')}
             unit="%"
           />
           <OutputEntity
@@ -368,8 +369,8 @@ class Calculator extends React.Component {
           />
           <OutputEntity
             title="Ежемесячный платеж"
-            value={this.state.outputData.monthlyPayment}
-            unit="руб."
+            value={Number(this.state.outputData.monthlyPayment).toLocaleString('ru-RU')}
+            unit="&#8381;" // Ruble symbol
           />
           {gracePeriodLabel}
           <OutputEntity

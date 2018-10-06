@@ -54,65 +54,6 @@ class InputRange extends React.Component {
   }
 }
 
-// class InterestRateInput extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.handleChange = this.handleChange.bind(this);
-//   }
-//   handleChange(e) {
-//     this.props.onValueChange(e.target.checked);
-//   }
-//   render () {
-//     return(
-//       <div className="interest-rate">
-//           <input className="interest-rate__checkbox"
-//             type="checkbox"
-//             id="interestRate"
-//             name="lowerInterestRate"
-//             onChange={this.handleChange}
-//           />
-//           <label className="interest-rate__label" htmlFor="interestRate">
-//             Льготная ставка&nbsp;
-//               <span className="tooltip" data-tooltip="Для программ с сниженной процентной ставкой">
-//                 <FontAwesome name="question-circle-o" />
-//               </span>
-//           </label>
-//
-//       </div>
-//     )
-//   }
-// }
-
-class InterestRateRadio extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  handleChange(e) {
-    // this.props.onValueChange(e.target.value);
-  }
-  render() {
-    return (
-      <span className="interest-rate">
-       <input className="interest-rate__checkbox"
-         type="radio"
-         // id="InterestRateRadio"
-         name="interestRate"
-         defaultChecked
-         // onChange={this.handleChange}
-         value={this.props.value}
-       />
-       <label className="interest-rate__label" htmlFor="InterestRateRadio">
-         {this.props.label}&nbsp;
-           <span className="tooltip" data-tooltip={this.props.tooltip}>
-             <FontAwesome name="question-circle-o" />
-           </span>
-       </label>
-     </span>
-    )
-  }
-}
-
 class OutputEntity extends React.Component {
   render () {
     return(
@@ -132,7 +73,6 @@ class Calculator extends React.Component {
     this.handleSumChange = this.handleSumChange.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.handleGraceChange = this.handleGraceChange.bind(this);
-    // this.handleInterestRateInputChange = this.handleInterestRateInputChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.state = {
       loanSum: {
@@ -240,23 +180,6 @@ class Calculator extends React.Component {
         graceValue);
   }
 
-  /*handleInterestRateInputChange(lowerInterestRate) {
-    let interest = null;
-    if(lowerInterestRate) {
-      interest = 7;
-      this.setState({
-        interestRate: 7,
-      });
-    } else {
-      interest = 9;
-      this.setState({
-        interestRate: 9,
-      });
-    }
-    this.Calculate(interest, this.state.loanSum.value,
-      this.state.loanTerm.value, this.state.gracePeriod.value);
-  }*/
-
   Calculate(interest, sum, term, grace) {
     const monthlyInterest = interest/100/12;
     let monthlyPayment = this.state.outputData.monthlyPayment;
@@ -327,10 +250,6 @@ class Calculator extends React.Component {
             desc="Льготный период"
             tooltip="Период, в котором уплачиваются только проценты."
           />
-          {/*<InterestRateInput
-            lowerInterestRate="false"
-            onValueChange={this.handleInterestRateInputChange}
-          />*/}
           <div className="input-field">
           <p className="input-field__description">Программы фонда для разных категорий предпринимателей:</p>
           <RadioGroup className="interest-rate-radio"

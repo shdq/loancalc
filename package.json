@@ -6,8 +6,8 @@
     "react-scripts": "^1.1.5"
   },
   "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "react-fontawesome": "^1.6.1",
     "react-radio-group": "^3.0.2"
   },

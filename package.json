@@ -1,5 +1,5 @@
 {
-  "name": "calc",
+  "name": "loancalc",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {

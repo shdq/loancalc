@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { RadioGroup, Radio } from 'react-radio-group'
-import OutputEntity from './components/OutputEntity';
-import InputRange from './components/InputRange';
+import OutputEntity from './OutputEntity';
+import InputRange from './InputRange';
 
 const element = document.getElementsByClassName('key-interest-rate__value');
 let keyInterestRate = element[0].dataset.value;
@@ -37,6 +37,7 @@ class Calculator extends React.Component {
       },
       interestRate: keyInterestRate,
       selectedValue: '0', // default reduction factor
+      startDate: Date.now(),
       outputData: {
         monthlyPayment: 15495.76,
         gracePeriod: 0,
@@ -131,20 +132,20 @@ class Calculator extends React.Component {
     let gracePayment = this.state.outputData.gracePayment;
     if(grace>0) {
       const graceDepreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),-1));
-      gracePayment = (sum*graceDepreciation-sum).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), -1));
+      gracePayment = (sum * graceDepreciation - sum).toFixed(2);
       term = term - grace;
       const depreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),(term-(term*2))));
-      monthlyPayment = (sum*depreciation).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), (term - (term * 2))));
+      monthlyPayment = (sum * depreciation).toFixed(2);
     } else {
       gracePayment = grace;
       const depreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),(term-(term*2))));
-      monthlyPayment = (sum*depreciation).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), (term - (term * 2))));
+      monthlyPayment = (sum * depreciation).toFixed(2);
     }
     let requirements = 'Поручительства физических или юридических лиц';
-    if(sum>500000) {
+    if(sum > 500000) {
       requirements = 'Залоговое имущество, поручительства физических или юридических лиц';
     }
     this.setState({

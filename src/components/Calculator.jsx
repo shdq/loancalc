@@ -149,6 +149,7 @@ class Calculator extends React.Component {
 
     let interestPayments = 0;
     let debtPayments = 0;
+    let gracePeriod = this.state.gracePeriod.value;
 
     for (let i = 1; i <= this.state.loanTerm.value; i++) {
       const paymentDate = date.add(1, 'month').clone();
@@ -166,11 +167,17 @@ class Calculator extends React.Component {
       const monthlyInterest = remainLoan * monthlyRate;
       interestPayments += monthlyInterest;
 
+      if(gracePeriod > 0) {
+        const row = [i, paymentDate.format('L'), roundHelper(remainLoan), roundHelper(monthlyInterest), roundHelper(monthlyInterest), '-'];
+        rows.push(row);
+
+        gracePeriod--;
+        continue;
+      }
+
       let monthlyDebtPayment = this.state.outputData.monthlyPayment - monthlyInterest;
       debtPayments += monthlyDebtPayment;
-      // if(i === this.state.loanTerm.value) {
-      //   monthlyDebtPayment = remainLoan;
-      // }
+      
       const row = [i, paymentDate.format('L'), roundHelper(remainLoan), this.state.outputData.monthlyPayment, roundHelper(monthlyInterest), roundHelper(monthlyDebtPayment)];
       remainLoan -= monthlyDebtPayment;
       rows.push(row);

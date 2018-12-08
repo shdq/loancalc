@@ -170,7 +170,6 @@ class Calculator extends React.Component {
       if(gracePeriod > 0) {
         const row = [i, paymentDate.format('L'), roundHelper(remainLoan), roundHelper(monthlyInterest), roundHelper(monthlyInterest), '-'];
         rows.push(row);
-
         gracePeriod--;
         continue;
       }
@@ -183,6 +182,8 @@ class Calculator extends React.Component {
       rows.push(row);
     }
 
+    let totalPayments;
+    this.state.gracePeriod.value > 0 ? totalPayments = this.state.gracePeriod.value * this.state.outputData.gracePeriod + this.state.outputData.monthlyPayment * (this.state.loanTerm.value - this.state.gracePeriod.value) : totalPayments = this.state.outputData.monthlyPayment * this.state.loanTerm.value;
 
     let docDefinition = { 
           // a string or { width: number, height: number }
@@ -224,7 +225,7 @@ class Calculator extends React.Component {
                 {text: 'На погашение долга, руб.', alignment: 'center', bold: true},
               ],
               ...rows,
-              [{text: 'Итого', colSpan: 2, bold: true},{},'–',{text: roundHelper(this.state.outputData.monthlyPayment * this.state.loanTerm.value), alignment: 'right', bold: true}, {text: roundHelper(interestPayments), alignment: 'right', bold: true}, {text: roundHelper(debtPayments), alignment: 'right', bold: true}],
+              [{text: 'Итого', colSpan: 2, bold: true},{},'–',{text: roundHelper(totalPayments), alignment: 'right', bold: true}, {text: roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
             ]
           }
         }

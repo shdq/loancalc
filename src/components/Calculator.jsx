@@ -225,7 +225,7 @@ class Calculator extends React.Component {
                 {text: 'На погашение долга, руб.', alignment: 'center', bold: true},
               ],
               ...rows,
-              [{text: 'Итого', colSpan: 2, bold: true},{},'–',{text: roundHelper(totalPayments), alignment: 'right', bold: true}, {text: roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
+              [{text: 'Итого', colSpan: 2, bold: true},{},{text: '–', alignment: 'right', bold: true},{text: roundHelper(totalPayments), alignment: 'right', bold: true}, {text: roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
             ]
           }
         }

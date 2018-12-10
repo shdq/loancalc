@@ -23,12 +23,17 @@ if(isNaN(keyInterestRate)) {
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
+
     this.Calculate = this.Calculate.bind(this);
     this.handleSumChange = this.handleSumChange.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.handleGraceChange = this.handleGraceChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.generatePdf = this.generatePdf.bind(this);
+    this.roundHelper = this.roundHelper.bind(this);
+    this.fillRows = this.fillRows.bind(this);
+    this.constructRow = this.constructRow.bind(this);
+
     this.state = {
       loanSum: {
         value: 500000,
@@ -136,23 +141,31 @@ class Calculator extends React.Component {
         graceValue);
   }
 
-  generatePdf() {
-    const startDate = this.state.startDate.format('L');
-    
-    const date = this.state.startDate.clone();
-    let monthlyRate = this.state.interestRate / 100 / 12;
-    let remainLoan = this.state.loanSum.value;
+  roundHelper = number => Math.round(number * 100) / 100;
 
-    const roundHelper = number => Math.round(number * 100) / 100;
+  constructRow = (number, paymentDate, loanSum, monthlyInterest, monthlyPayment, monthlyDebtPayment, gracePeriod) => {
+    return [
+      { text: number, alignment: 'right' },
+      { text: paymentDate.format('L'), alignment: 'right' },
+      { text: this.roundHelper(loanSum), alignment: 'right' },
+      gracePeriod > 0 ?
+      { text: this.roundHelper(monthlyInterest), alignment: 'right' } :
+      { text: monthlyPayment, alignment: 'right' },
+      { text: this.roundHelper(monthlyInterest), alignment: 'right' },
+      gracePeriod > 0 ?
+      { text: '–', alignment: 'right' } :
+      { text: this.roundHelper(monthlyDebtPayment), alignment: 'right' }
+    ];
+  }
 
+  fillRows = (loanSum, loanTerm, gracePeriod, monthlyPayment, interestRate, startDate) => {
     const rows = [];
+    const date = startDate.clone();
+    const monthlyRate = interestRate / 100 / 12;
 
-    let interestPayments = 0;
-    let debtPayments = 0;
-    let gracePeriod = this.state.gracePeriod.value;
-
-    for (let i = 1; i <= this.state.loanTerm.value; i++) {
+    for (let i = 1; i <= loanTerm; i++) {
       const paymentDate = date.add(1, 'month').clone();
+      
       switch (paymentDate.day()) {
         case 6:
           paymentDate.add(2, 'days');
@@ -164,36 +177,43 @@ class Calculator extends React.Component {
           break;
       }
 
-      const monthlyInterest = remainLoan * monthlyRate;
-      interestPayments += monthlyInterest;
+      const monthlyInterest = loanSum * monthlyRate;
+      const monthlyDebtPayment = monthlyPayment - monthlyInterest;
 
-      if(gracePeriod > 0) {
-        const row = [i, paymentDate.format('L'), roundHelper(remainLoan), roundHelper(monthlyInterest), roundHelper(monthlyInterest), '-'];
-        rows.push(row);
+      const row = this.constructRow(i, paymentDate, loanSum, monthlyInterest, monthlyPayment, monthlyDebtPayment, gracePeriod);
+      rows.push(row);
+
+      if(gracePeriod > 0) { 
         gracePeriod--;
         continue;
       }
-
-      let monthlyDebtPayment = this.state.outputData.monthlyPayment - monthlyInterest;
-      debtPayments += monthlyDebtPayment;
-      
-      const row = [i, paymentDate.format('L'), roundHelper(remainLoan), this.state.outputData.monthlyPayment, roundHelper(monthlyInterest), roundHelper(monthlyDebtPayment)];
-      remainLoan -= monthlyDebtPayment;
-      rows.push(row);
+      loanSum -= monthlyDebtPayment;
     }
+    return rows;
+  }
+
+  generatePdf() {
+
+    const rows = this.fillRows(this.state.loanSum.value, this.state.loanTerm.value,
+      this.state.gracePeriod.value, this.state.outputData.monthlyPayment,
+      this.state.interestRate, this.state.startDate);
 
     let totalPayments;
-    this.state.gracePeriod.value > 0 ? totalPayments = this.state.gracePeriod.value * this.state.outputData.gracePeriod + this.state.outputData.monthlyPayment * (this.state.loanTerm.value - this.state.gracePeriod.value) : totalPayments = this.state.outputData.monthlyPayment * this.state.loanTerm.value;
+    this.state.gracePeriod.value > 0 ?
+      totalPayments = this.state.gracePeriod.value *
+                      this.state.outputData.gracePeriod +
+                      this.state.outputData.monthlyPayment *
+                      ( this.state.loanTerm.value - this.state.gracePeriod.value ) :
+      totalPayments = this.state.outputData.monthlyPayment * this.state.loanTerm.value;
 
     let docDefinition = { 
-          // a string or { width: number, height: number }
+      // a string or { width: number, height: number }
       pageSize: 'A4',
-      // by default we use portrait, you can change it to landscape if you wish
       pageOrientation: 'landscape',
       content:
       [
         {
-          text: `График возврата займа от ${startDate}\n\n`, fontSize: 18, color: "#0a6586"
+          text: `График возврата займа от ${this.state.startDate.format('L')}\n\n`, fontSize: 18, color: "#0a6586"
         },
         { text: 'Условия микрозайма:', bold: true },
         { text: `Сумма займа: ${this.state.loanSum.value} руб.`},
@@ -205,14 +225,14 @@ class Calculator extends React.Component {
             // headers are automatically repeated if the table spans over multiple pages
             // you can declare how many rows should be treated as headers
             headerRows: 2,
-            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: [25, 'auto', 'auto', 'auto', 'auto', 'auto'],
     
             body: [
               [
-                {rowSpan: 2, text: '№', alignment: 'center', bold: true},
-                {rowSpan: 2, text: 'Дата', alignment: 'center', bold: true},
-                {rowSpan: 2, text: 'Остаток долга на начало месяца, руб.', alignment: 'center', bold: true},
-                {rowSpan: 2, text: 'Ежемесячная срочная уплата, руб.', alignment: 'center', bold: true},
+                {rowSpan: 2, text: '№', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Дата', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Остаток долга на начало месяца, руб.', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Ежемесячная срочная уплата, руб.', alignment: 'right', bold: true},
                 {text: 'В том числе:', colSpan: 2, alignment: 'center', bold: true},
                 {}
               ],
@@ -221,11 +241,11 @@ class Calculator extends React.Component {
                 {},
                 {},
                 {},
-                {text: 'На выплату процентов, руб.', alignment: 'center', bold: true},
-                {text: 'На погашение долга, руб.', alignment: 'center', bold: true},
+                {text: 'На выплату процентов, руб.', alignment: 'right', bold: true},
+                {text: 'На погашение долга, руб.', alignment: 'right', bold: true},
               ],
               ...rows,
-              [{text: 'Итого', colSpan: 2, bold: true},{},{text: '–', alignment: 'right', bold: true},{text: roundHelper(totalPayments), alignment: 'right', bold: true}, {text: roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
+              [{text: 'Итого', colSpan: 2, bold: true, alignment: 'left'},{},{text: '–', alignment: 'right', bold: true},{text: this.roundHelper(totalPayments), alignment: 'right', bold: true}, {text: this.roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
             ]
           }
         }

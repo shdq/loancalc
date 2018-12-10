@@ -146,7 +146,7 @@ class Calculator extends React.Component {
   constructRow = (number, paymentDate, loanSum, monthlyInterest, monthlyPayment, monthlyDebtPayment, gracePeriod) => {
     return [
       { text: number, alignment: 'right' },
-      { text: paymentDate.format('L'), alignment: 'right' },
+      { text: paymentDate.format('MMMM YYYY'), alignment: 'left' },
       { text: this.roundHelper(loanSum), alignment: 'right' },
       gracePeriod > 0 ?
       { text: this.roundHelper(monthlyInterest), alignment: 'right' } :
@@ -160,22 +160,11 @@ class Calculator extends React.Component {
 
   fillRows = (loanSum, loanTerm, gracePeriod, monthlyPayment, interestRate, startDate) => {
     const rows = [];
-    const date = startDate.clone();
+    const paymentDate = startDate.clone();
     const monthlyRate = interestRate / 100 / 12;
 
     for (let i = 1; i <= loanTerm; i++) {
-      const paymentDate = date.add(1, 'month').clone();
-      
-      switch (paymentDate.day()) {
-        case 6:
-          paymentDate.add(2, 'days');
-          break;
-        case 0:
-          paymentDate.add(1, 'day');
-          break;
-        default:
-          break;
-      }
+      paymentDate.add(1, 'month');
 
       const monthlyInterest = loanSum * monthlyRate;
       const monthlyDebtPayment = monthlyPayment - monthlyInterest;
@@ -213,24 +202,24 @@ class Calculator extends React.Component {
       content:
       [
         {
-          text: `График возврата займа от ${this.state.startDate.format('L')}\n\n`, fontSize: 18, color: "#0a6586"
+          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')}\n\n`, fontSize: 18, color: "#0a6586"
         },
         { text: 'Условия микрозайма:', bold: true },
         { text: `Сумма займа: ${this.state.loanSum.value} руб.`},
         { text: `Срок займа: ${this.state.loanTerm.value} мес.`},
-        { text: `Льготный период: ${this.state.gracePeriod.value} мес.`},
-        { text: `Годовая ставка: ${this.state.selectedValue}%\n\n`},
+        { text: `${this.state.gracePeriod.value > 0 ? `Льготный период: ${this.state.gracePeriod.value} мес.` : `` }`},
+        { text: `Годовая ставка: ${Number(this.state.interestRate).toLocaleString('ru-RU')}%\n\n`},
         {
           table: {
             // headers are automatically repeated if the table spans over multiple pages
             // you can declare how many rows should be treated as headers
             headerRows: 2,
-            widths: [25, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: [25, 100, 'auto', 'auto', 'auto', 'auto'],
     
             body: [
               [
                 {rowSpan: 2, text: '№', alignment: 'right', bold: true},
-                {rowSpan: 2, text: 'Дата', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Дата платежа', alignment: 'left', bold: true},
                 {rowSpan: 2, text: 'Остаток долга на начало месяца, руб.', alignment: 'right', bold: true},
                 {rowSpan: 2, text: 'Ежемесячная срочная уплата, руб.', alignment: 'right', bold: true},
                 {text: 'В том числе:', colSpan: 2, alignment: 'center', bold: true},

@@ -62,7 +62,7 @@ class Calculator extends React.Component {
       selectedValue: '0', // default reduction factor
       startDate: moment(),
       outputData: {
-        monthlyPayment: 15495.76,
+        monthlyPayment: 15553.11,
         gracePeriod: 0,
         // gracePayment: 3020.83,
         requirements: 'Поручительства физических или юридических лиц'

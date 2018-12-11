@@ -250,7 +250,7 @@ class Calculator extends React.Component {
         { text: '\n\nhttps://cmf29.ru/kalkulator', alignment: 'right', bold: true, color: "#0a6586"}
       ]
     };
-    pdfMake.createPdf(docDefinition).open();//download(`График-платежей-с-${date}.pdf`)
+    pdfMake.createPdf(docDefinition).download(`График-платежей-с-${this.state.startDate.format('L')}.pdf`);
   }
 
   handleDateChange(date) {

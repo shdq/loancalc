@@ -281,7 +281,7 @@ input[type="checkbox"]:checked + label:before {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
+    background-color: #ffffff;  
     border: 2px solid #0a6586;
     border-radius: 20px;
     margin-right: 10px;

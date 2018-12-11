@@ -210,7 +210,7 @@ class Calculator extends React.Component {
       content:
       [
         {
-          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')} г.\n\n`, fontSize: 18, color: "#0a6586"
+          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')} г. *\n\n`, fontSize: 18, color: "#0a6586"
         },
         { text: 'Условия микрозайма:', bold: true },
         { text: `Сумма займа: ${this.state.loanSum.value} руб.`},
@@ -245,7 +245,9 @@ class Calculator extends React.Component {
               [{text: 'Итого', colSpan: 2, bold: true, alignment: 'left'},{},{text: '–', alignment: 'right', bold: true},{text: this.roundHelper(totalPayments), alignment: 'right', bold: true}, {text: this.roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
             ]
           }
-        }
+        },
+        { text: '\n* Не является приложением к договору, расчет предварительный.'},
+        { text: '\n\nhttps://cmf29.ru/kalkulator', alignment: 'right', bold: true, color: "#0a6586"}
       ]
     };
     pdfMake.createPdf(docDefinition).open();//download(`График-платежей-с-${date}.pdf`)

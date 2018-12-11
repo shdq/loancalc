@@ -1,15 +1,13 @@
 import React from 'react';
 
-class OutputEntity extends React.Component {
-  render () {
+const OutputEntity = props => {
     return(
       <div className="output-field">
-        <p className="output-field__description">{this.props.title}:&nbsp;
-          <span className="output-field__value">{this.props.value} {this.props.unit}</span>
+        <p className="output-field__description">{props.title}:&nbsp;
+          <span className="output-field__value">{props.value} {props.unit}</span>
         </p>
       </div>
     )
-  }
 }
 
 export default OutputEntity;

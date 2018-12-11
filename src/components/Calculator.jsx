@@ -1,8 +1,24 @@
 import React from 'react';
 
 import { RadioGroup, Radio } from 'react-radio-group'
-import OutputEntity from './components/OutputEntity';
-import InputRange from './components/InputRange';
+import OutputEntity from './OutputEntity';
+import InputRange from './InputRange';
+import GeneratePdfButton from './GeneratePdfButton';
+import DateInput from './DateInput';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import moment from 'moment';
+import 'moment/locale/ru';
+
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.min.css';
+import { ru } from "date-fns/esm/locale";
+registerLocale("ru", ru);
+setDefaultLocale("ru");
+
+// correct fonts import for pdfmake
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const element = document.getElementsByClassName('key-interest-rate__value');
 let keyInterestRate = element[0].dataset.value;
@@ -14,11 +30,18 @@ if(isNaN(keyInterestRate)) {
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
+
     this.Calculate = this.Calculate.bind(this);
     this.handleSumChange = this.handleSumChange.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.handleGraceChange = this.handleGraceChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.generatePdf = this.generatePdf.bind(this);
+    this.roundHelper = this.roundHelper.bind(this);
+    this.fillRows = this.fillRows.bind(this);
+    this.constructRow = this.constructRow.bind(this);
+
     this.state = {
       loanSum: {
         value: 500000,
@@ -37,8 +60,9 @@ class Calculator extends React.Component {
       },
       interestRate: keyInterestRate,
       selectedValue: '0', // default reduction factor
+      startDate: moment(),
       outputData: {
-        monthlyPayment: 15495.76,
+        monthlyPayment: 15553.11,
         gracePeriod: 0,
         // gracePayment: 3020.83,
         requirements: 'Поручительства физических или юридических лиц'
@@ -125,26 +149,136 @@ class Calculator extends React.Component {
         graceValue);
   }
 
+  roundHelper = number => Math.round(number * 100) / 100;
+
+  constructRow = (number, paymentDate, loanSum, monthlyInterest, monthlyPayment, monthlyDebtPayment, gracePeriod) => {
+    return [
+      { text: number, alignment: 'right' },
+      { text: paymentDate.format('MMMM YYYY'), alignment: 'left' },
+      { text: this.roundHelper(loanSum), alignment: 'right' },
+      gracePeriod > 0 ?
+      { text: this.roundHelper(monthlyInterest), alignment: 'right' } :
+      { text: monthlyPayment, alignment: 'right' },
+      { text: this.roundHelper(monthlyInterest), alignment: 'right' },
+      gracePeriod > 0 ?
+      { text: '–', alignment: 'right' } :
+      { text: this.roundHelper(monthlyDebtPayment), alignment: 'right' }
+    ];
+  }
+
+  fillRows = (loanSum, loanTerm, gracePeriod, monthlyPayment, interestRate, startDate) => {
+    const rows = [];
+    const paymentDate = startDate.clone();
+    const monthlyRate = interestRate / 100 / 12;
+
+    for (let i = 1; i <= loanTerm; i++) {
+      paymentDate.add(1, 'month');
+
+      const monthlyInterest = loanSum * monthlyRate;
+      const monthlyDebtPayment = monthlyPayment - monthlyInterest;
+
+      const row = this.constructRow(i, paymentDate, loanSum, monthlyInterest, monthlyPayment, monthlyDebtPayment, gracePeriod);
+      rows.push(row);
+
+      if(gracePeriod > 0) { 
+        gracePeriod--;
+        continue;
+      }
+      loanSum -= monthlyDebtPayment;
+    }
+    return rows;
+  }
+
+  generatePdf() {
+
+    const rows = this.fillRows(this.state.loanSum.value, this.state.loanTerm.value,
+      this.state.gracePeriod.value, this.state.outputData.monthlyPayment,
+      this.state.interestRate, this.state.startDate);
+
+    let totalPayments;
+    this.state.gracePeriod.value > 0 ?
+      totalPayments = this.state.gracePeriod.value *
+                      this.state.outputData.gracePeriod +
+                      this.state.outputData.monthlyPayment *
+                      ( this.state.loanTerm.value - this.state.gracePeriod.value ) :
+      totalPayments = this.state.outputData.monthlyPayment * this.state.loanTerm.value;
+
+    let docDefinition = { 
+      // a string or { width: number, height: number }
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      content:
+      [
+        {
+          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')} г. *\n\n`, fontSize: 18, color: "#0a6586"
+        },
+        { text: 'Условия микрозайма:', bold: true },
+        { text: `Сумма займа: ${this.state.loanSum.value} руб.`},
+        { text: `Срок займа: ${this.state.loanTerm.value} мес.`},
+        { text: `${this.state.gracePeriod.value > 0 ? `Льготный период: ${this.state.gracePeriod.value} мес.` : `` }`},
+        { text: `Годовая ставка: ${Number(this.state.interestRate).toLocaleString('ru-RU')}%\n\n`},
+        {
+          table: {
+            // headers are automatically repeated if the table spans over multiple pages
+            // you can declare how many rows should be treated as headers
+            headerRows: 2,
+            widths: [25, 100, 'auto', 'auto', 'auto', 'auto'],
+    
+            body: [
+              [
+                {rowSpan: 2, text: '№', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Дата платежа', alignment: 'left', bold: true},
+                {rowSpan: 2, text: 'Остаток долга на начало месяца, руб.', alignment: 'right', bold: true},
+                {rowSpan: 2, text: 'Ежемесячная срочная уплата, руб.', alignment: 'right', bold: true},
+                {text: 'В том числе:', colSpan: 2, alignment: 'center', bold: true},
+                {}
+              ],
+              [
+                {},
+                {},
+                {},
+                {},
+                {text: 'На выплату процентов, руб.', alignment: 'right', bold: true},
+                {text: 'На погашение долга, руб.', alignment: 'right', bold: true},
+              ],
+              ...rows,
+              [{text: 'Итого', colSpan: 2, bold: true, alignment: 'left'},{},{text: '–', alignment: 'right', bold: true},{text: this.roundHelper(totalPayments), alignment: 'right', bold: true}, {text: this.roundHelper(totalPayments - this.state.loanSum.value), alignment: 'right', bold: true}, {text: this.state.loanSum.value, alignment: 'right', bold: true}],
+            ]
+          }
+        },
+        { text: '\n* Не является приложением к договору, расчет предварительный.'},
+        { text: '\n\nhttps://cmf29.ru/kalkulator', alignment: 'right', bold: true, color: "#0a6586"}
+      ]
+    };
+    pdfMake.createPdf(docDefinition).open();//download(`График-платежей-с-${date}.pdf`)
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      startDate: moment(date)
+    });
+  }
+
   Calculate(interest, sum, term, grace) {
     const monthlyInterest = interest/100/12;
     let monthlyPayment = this.state.outputData.monthlyPayment;
     let gracePayment = this.state.outputData.gracePayment;
     if(grace>0) {
       const graceDepreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),-1));
-      gracePayment = (sum*graceDepreciation-sum).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), -1));
+      gracePayment = (sum * graceDepreciation - sum).toFixed(2);
       term = term - grace;
       const depreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),(term-(term*2))));
-      monthlyPayment = (sum*depreciation).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), (term - (term * 2))));
+      monthlyPayment = (sum * depreciation).toFixed(2);
     } else {
       gracePayment = grace;
       const depreciation =
-      monthlyInterest/(1-Math.pow((1+monthlyInterest),(term-(term*2))));
-      monthlyPayment = (sum*depreciation).toFixed(2);
+      monthlyInterest / (1 - Math.pow((1 + monthlyInterest), (term - (term * 2))));
+      monthlyPayment = (sum * depreciation).toFixed(2);
     }
     let requirements = 'Поручительства физических или юридических лиц';
-    if(sum>500000) {
+    if(sum > 500000) {
       requirements = 'Залоговое имущество, поручительства физических или юридических лиц';
     }
     this.setState({
@@ -241,6 +375,21 @@ class Calculator extends React.Component {
             title="Требования к заемщику"
             value={this.state.outputData.requirements}
           />
+          <div class="output-field">
+            <p class="output-field__description">График возврата займа от&nbsp;
+            <DatePicker
+              selected={this.state.startDate._d}
+              onChange={this.handleDateChange}
+              dateFormat="d MMMM yyyy"
+              fixedHeight
+              showYearDropdown
+              yearDropdownItemNumber={1}
+              showYearSelectOnly
+              customInput={<DateInput />}
+            />
+            <GeneratePdfButton onClick={this.generatePdf} />
+            </p>
+          </div>
         </div>
       </div>
     )

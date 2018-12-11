@@ -270,3 +270,48 @@ input[type="checkbox"]:checked + label:before {
   filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
+
+.date-picker-button {
+  display: inline-block;
+    position: relative;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    border: 2px solid #0a6586;
+    border-radius: 20px;
+    margin-right: 10px;
+    padding: 10px;
+    /* padding-left: 40px; */
+    outline: none;
+}
+
+.download-button {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 2px solid #e76f51;
+  background-color: #e76f51;
+  color: #fff;
+  border-radius: 20px;
+  margin-right: 10px;
+  padding: 10px;
+  /* padding-left: 40px; */
+  outline: none;
+}
+
+.download-button:hover {
+  background-color: #f77757;
+  border: 2px solid #f77757;
+  color: #fff;
+}

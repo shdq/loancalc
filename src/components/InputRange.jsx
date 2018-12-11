@@ -1,6 +1,5 @@
 import React from 'react';
-import FontAwesome  from 'react-fontawesome';
-import '../font-awesome-4.7.0/css/font-awesome.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class InputRange extends React.Component {
   constructor(props) {
@@ -14,7 +13,7 @@ class InputRange extends React.Component {
     let tooltip = null;
     if(this.props.tooltip) {
       tooltip = <span className="tooltip" data-tooltip={this.props.tooltip}>
-        &nbsp;<FontAwesome name="question-circle-o" />
+        &nbsp;<FontAwesomeIcon icon="question-circle" />
       </span>;
     }
     let value = Number(this.props.field.value).toLocaleString('ru-RU');

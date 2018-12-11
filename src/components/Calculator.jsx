@@ -4,11 +4,18 @@ import { RadioGroup, Radio } from 'react-radio-group'
 import OutputEntity from './OutputEntity';
 import InputRange from './InputRange';
 import GeneratePdfButton from './GeneratePdfButton';
+import DateInput from './DateInput';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import moment from 'moment';
 import 'moment/locale/ru';
+
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.min.css';
+import { ru } from "date-fns/esm/locale";
+registerLocale("ru", ru);
+setDefaultLocale("ru");
 
 // correct fonts import for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -29,6 +36,7 @@ class Calculator extends React.Component {
     this.handleTermChange = this.handleTermChange.bind(this);
     this.handleGraceChange = this.handleGraceChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
     this.generatePdf = this.generatePdf.bind(this);
     this.roundHelper = this.roundHelper.bind(this);
     this.fillRows = this.fillRows.bind(this);
@@ -202,7 +210,7 @@ class Calculator extends React.Component {
       content:
       [
         {
-          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')}\n\n`, fontSize: 18, color: "#0a6586"
+          text: `График возврата займа от ${this.state.startDate.format('D MMMM YYYY')} г.\n\n`, fontSize: 18, color: "#0a6586"
         },
         { text: 'Условия микрозайма:', bold: true },
         { text: `Сумма займа: ${this.state.loanSum.value} руб.`},
@@ -241,6 +249,12 @@ class Calculator extends React.Component {
       ]
     };
     pdfMake.createPdf(docDefinition).open();//download(`График-платежей-с-${date}.pdf`)
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      startDate: moment(date)
+    });
   }
 
   Calculate(interest, sum, term, grace) {
@@ -359,7 +373,21 @@ class Calculator extends React.Component {
             title="Требования к заемщику"
             value={this.state.outputData.requirements}
           />
-          <GeneratePdfButton onClick={this.generatePdf} />
+          <div class="output-field">
+            <p class="output-field__description">График возврата займа от&nbsp;
+            <DatePicker
+              selected={this.state.startDate._d}
+              onChange={this.handleDateChange}
+              dateFormat="d MMMM yyyy"
+              fixedHeight
+              showYearDropdown
+              yearDropdownItemNumber={1}
+              showYearSelectOnly
+              customInput={<DateInput />}
+            />
+            <GeneratePdfButton onClick={this.generatePdf} />
+            </p>
+          </div>
         </div>
       </div>
     )

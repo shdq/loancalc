@@ -46,7 +46,7 @@ class Calculator extends React.Component {
       loanSum: {
         value: 500000,
         minValue: 100000,
-        maxValue: 3000000,
+        maxValue: 5000000,
       },
       loanTerm: {
         value: 36,
@@ -75,7 +75,7 @@ class Calculator extends React.Component {
       loanSum: {
         value: loanSum,
         minValue: 100000,
-        maxValue: 3000000,
+        maxValue: 5000000,
       },
     });
     this.Calculate(this.state.interestRate, loanSum, this.state.loanTerm.value,
@@ -375,8 +375,8 @@ class Calculator extends React.Component {
             title="Требования к заемщику"
             value={this.state.outputData.requirements}
           />
-          <div class="output-field">
-            <p class="output-field__description">График возврата займа от&nbsp;
+          <div className="output-field">
+            <div className="output-field__description">График возврата займа от&nbsp;
             <DatePicker
               selected={this.state.startDate._d}
               onChange={this.handleDateChange}
@@ -388,7 +388,7 @@ class Calculator extends React.Component {
               customInput={<DateInput />}
             />
             <GeneratePdfButton onClick={this.generatePdf} />
-            </p>
+            </div>
           </div>
         </div>
       </div>

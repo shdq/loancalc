@@ -5,7 +5,9 @@
   font-size: 16px;
   width: 100%;
 }
-.input-group {}
+.input-group {
+  padding: 0 10px;
+}
 .output-group {}
 
 /* InputRange component */

@@ -1,5 +1,5 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class DateInput extends React.Component {
   constructor(props) {
@@ -9,14 +9,13 @@ class DateInput extends React.Component {
   onClick(e) {
     this.props.onValueChange(e.target.value);
   }
-  render () {
+  render() {
     return (
-      <button
-        className="date-picker-button"
-        onClick={this.props.onClick}>
-        {this.props.value}&nbsp;<FontAwesomeIcon icon="caret-down" />
+      <button className="date-picker-button" onClick={this.props.onClick}>
+        {this.props.value}&nbsp;
+        <FontAwesomeIcon icon="caret-down" />
       </button>
-    )
+    );
   }
 }
 

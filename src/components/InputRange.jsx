@@ -1,5 +1,5 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class InputRange extends React.Component {
   constructor(props) {
@@ -9,22 +9,28 @@ class InputRange extends React.Component {
   handleChange(e) {
     this.props.onValueChange(e.target.value);
   }
-  render () {
+  render() {
     let tooltip = null;
-    if(this.props.tooltip) {
-      tooltip = <span className="tooltip" data-tooltip={this.props.tooltip}>
-        &nbsp;<FontAwesomeIcon icon="question-circle" />
-      </span>;
+    if (this.props.tooltip) {
+      tooltip = (
+        <span className="tooltip" data-tooltip={this.props.tooltip}>
+          &nbsp;
+          <FontAwesomeIcon icon="question-circle" />
+        </span>
+      );
     }
-    let value = Number(this.props.field.value).toLocaleString('ru-RU');
-    return(
+    let value = Number(this.props.field.value).toLocaleString("ru-RU");
+    return (
       <div className="input-field">
-        <p className="input-field__description">{this.props.desc}{tooltip}&nbsp;
+        <p className="input-field__description">
+          {this.props.desc}
+          {tooltip}&nbsp;
           <span className="input-field__range-value">
             {value} {this.props.unit}
           </span>
         </p>
-        <input className="input-field__range"
+        <input
+          className="input-field__range"
           type="range"
           min={this.props.field.minValue}
           max={this.props.field.maxValue}
@@ -34,12 +40,14 @@ class InputRange extends React.Component {
         />
         <p className="input-field__label">
           <span className="input-field__label-value input-field__label-value_min">
-            {this.props.field.minValue.toLocaleString('ru-RU')}</span>
+            {this.props.field.minValue.toLocaleString("ru-RU")}
+          </span>
           <span className="input-field__label-value input-field__label-value_max">
-            {this.props.field.maxValue.toLocaleString('ru-RU')}</span>
+            {this.props.field.maxValue.toLocaleString("ru-RU")}
+          </span>
         </p>
       </div>
-    )
+    );
   }
 }
 

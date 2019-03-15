@@ -45,7 +45,7 @@ class Calculator extends React.Component {
     this.state = {
       loanSum: {
         value: 500000,
-        minValue: 100000,
+        minValue: 50000,
         maxValue: 5000000
       },
       loanTerm: {
@@ -74,8 +74,8 @@ class Calculator extends React.Component {
     this.setState({
       loanSum: {
         value: loanSum,
-        minValue: 100000,
-        maxValue: 5000000
+        minValue: this.state.selectedValue === "express" ? 30000 : 50000,
+        maxValue: this.state.selectedValue === "express" ? 100000 : 5000000
       }
     });
     this.Calculate(
@@ -87,7 +87,10 @@ class Calculator extends React.Component {
   }
 
   handleTermChange(loanTerm) {
-    const graceMaxValue = loanTerm - 1; //(loanTerm - (loanTerm % 2)) / 2;
+    let graceMaxValue;
+    this.state.selectedValue === "express"
+      ? (graceMaxValue = 0)
+      : (graceMaxValue = loanTerm - 1);
     const graceValue =
       this.state.gracePeriod.value < graceMaxValue
         ? this.state.gracePeriod.value
@@ -130,6 +133,12 @@ class Calculator extends React.Component {
   }
 
   handleRadioChange(value) {
+    let minLoanSum;
+    value === "express" ? (minLoanSum = 30000) : (minLoanSum = 50000);
+    let maxLoanSum;
+    value === "express" ? (maxLoanSum = 100000) : (maxLoanSum = 5000000);
+    let loanSum = this.state.loanSum.value;
+    if (loanSum < minLoanSum) loanSum = minLoanSum;
     let interestRate = keyInterestRate - value;
     let loanTerm = this.state.loanTerm.value;
     let maxLoanTerm = 36;
@@ -149,6 +158,19 @@ class Calculator extends React.Component {
       }
       graceMaxValue = loanTerm - 1;
     }
+    if (value === "express") {
+      interestRate = keyInterestRate;
+      maxLoanTerm = 12;
+      graceMaxValue = 0;
+      graceValue = 0;
+      if (loanTerm > 12) {
+        loanTerm = 12;
+        if (graceValue > 0) {
+          graceValue = 0;
+        }
+      }
+      if (loanSum > maxLoanSum) loanSum = maxLoanSum;
+    }
     this.setState({
       selectedValue: value,
       interestRate: interestRate,
@@ -161,6 +183,11 @@ class Calculator extends React.Component {
         value: graceValue,
         minValue: 0,
         maxValue: graceMaxValue
+      },
+      loanSum: {
+        value: loanSum,
+        minValue: minLoanSum,
+        maxValue: maxLoanSum
       }
     });
     this.Calculate(
@@ -438,7 +465,7 @@ class Calculator extends React.Component {
             field={loanSum}
             onValueChange={this.handleSumChange}
             unit="&#8381;" // Ruble symbol
-            step="50000"
+            step={this.state.selectedValue === "express" ? "10000" : "50000"}
             desc="Сумма займа"
           />
           <InputRange
@@ -473,6 +500,15 @@ class Calculator extends React.Component {
                   value="0"
                 />
                 «Стандарт»
+                <span className="interest-rate-radio__checkmark" />
+              </label>
+              <label className="interest-rate-radio__label">
+                <Radio
+                  className="interest-rate-radio__input"
+                  checked={this.state.selectedValue === "express"}
+                  value="express"
+                />
+                «Экспресс»
                 <span className="interest-rate-radio__checkmark" />
               </label>
               <label className="interest-rate-radio__label">

@@ -139,6 +139,8 @@ class Calculator extends React.Component {
     value === "express" ? (maxLoanSum = 100000) : (maxLoanSum = 5000000);
     let loanSum = this.state.loanSum.value;
     if (loanSum < minLoanSum) loanSum = minLoanSum;
+    if (value !== "express" && loanSum < minLoanSum + 50000)
+      loanSum = minLoanSum;
     let interestRate = keyInterestRate - value;
     let loanTerm = this.state.loanTerm.value;
     let maxLoanTerm = 36;
@@ -190,12 +192,7 @@ class Calculator extends React.Component {
         maxValue: maxLoanSum
       }
     });
-    this.Calculate(
-      interestRate,
-      this.state.loanSum.value,
-      loanTerm,
-      graceValue
-    );
+    this.Calculate(interestRate, loanSum, loanTerm, graceValue);
   }
 
   roundHelper = number => Math.round(number * 100) / 100;

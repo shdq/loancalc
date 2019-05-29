@@ -511,6 +511,18 @@ class Calculator extends React.Component {
               <label className="interest-rate-radio__label">
                 <Radio
                   className="interest-rate-radio__input"
+                  checked={
+                    this.state.selectedValue ===
+                    (keyInterestRate / 2).toPrecision(2)
+                  }
+                  value={(keyInterestRate / 2).toPrecision(3)}
+                />
+                «Моногород»
+                <span className="interest-rate-radio__checkmark" />
+              </label>
+              <label className="interest-rate-radio__label">
+                <Radio
+                  className="interest-rate-radio__input"
                   checked={this.state.selectedValue === "0.5"}
                   value="0.5"
                 />
@@ -523,8 +535,8 @@ class Calculator extends React.Component {
                   checked={this.state.selectedValue === "0.25"}
                   value="0.25"
                 />
-                «Арктика», «Лизинг», «Местный товаропроизводитель», «Моногород»,
-                «Сельский туризм»
+                «Арктика», «Лизинг», «Местный товаропроизводитель», «Сельский
+                туризм»
                 <span className="interest-rate-radio__checkmark" />
               </label>
               <label className="interest-rate-radio__label">

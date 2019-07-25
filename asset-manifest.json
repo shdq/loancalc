@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/loancalc/static/css/main.5838bb07.chunk.css",
+    "main.js": "/loancalc/static/js/main.a2b2ad6b.chunk.js",
+    "main.js.map": "/loancalc/static/js/main.a2b2ad6b.chunk.js.map",
+    "runtime~main.js": "/loancalc/static/js/runtime~main.545b4314.js",
+    "runtime~main.js.map": "/loancalc/static/js/runtime~main.545b4314.js.map",
+    "static/css/2.daff5612.chunk.css": "/loancalc/static/css/2.daff5612.chunk.css",
+    "static/js/2.b7d5f533.chunk.js": "/loancalc/static/js/2.b7d5f533.chunk.js",
+    "static/js/2.b7d5f533.chunk.js.map": "/loancalc/static/js/2.b7d5f533.chunk.js.map",
+    "index.html": "/loancalc/index.html",
+    "precache-manifest.71f9ea789ef47d508b1daf625c718882.js": "/loancalc/precache-manifest.71f9ea789ef47d508b1daf625c718882.js",
+    "service-worker.js": "/loancalc/service-worker.js",
+    "static/css/2.daff5612.chunk.css.map": "/loancalc/static/css/2.daff5612.chunk.css.map",
+    "static/css/main.5838bb07.chunk.css.map": "/loancalc/static/css/main.5838bb07.chunk.css.map"
+  }
+}

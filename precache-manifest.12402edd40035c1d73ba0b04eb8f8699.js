@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1b537d533857da8f415f290dab992fa8",
+    "revision": "42f922cf39bfa5fcb31f69743a66f955",
     "url": "/loancalc/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/loancalc/static/css/2.daff5612.chunk.css"
   },
   {
-    "revision": "01efd4b99118b4a1da35",
+    "revision": "fa1f81dbe1e8394aa10a",
     "url": "/loancalc/static/css/main.5838bb07.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/loancalc/static/js/2.64355d18.chunk.js"
   },
   {
-    "revision": "01efd4b99118b4a1da35",
-    "url": "/loancalc/static/js/main.59616676.chunk.js"
+    "revision": "fa1f81dbe1e8394aa10a",
+    "url": "/loancalc/static/js/main.7ff68329.chunk.js"
   },
   {
     "revision": "2e8a6c12344b53effd6f",

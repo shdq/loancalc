@@ -5,7 +5,7 @@
   "homepage": "https://shdq.github.io/loancalc",
   "devDependencies": {
     "gh-pages": "^2.0.1",
-    "react-scripts": "^3.0.1"
+    "react-scripts": "^3.3.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",

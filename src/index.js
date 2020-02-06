@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+/* Baseweb design system */
+import { Provider as StyletronProvider } from "styletron-react";
+import { Client as Styletron } from "styletron-engine-atomic";
+
 import Calculator from "./components/Calculator.jsx";
 import "./index.css";
 
@@ -13,4 +17,11 @@ import {
 
 library.add(faFilePdf, faQuestionCircle, faCaretDown);
 
-ReactDOM.render(<Calculator />, document.getElementById("root"));
+const engine = new Styletron();
+
+ReactDOM.render(
+  <StyletronProvider value={engine}>
+    <Calculator />
+  </StyletronProvider>,
+  document.getElementById("root")
+);

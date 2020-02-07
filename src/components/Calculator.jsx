@@ -11,12 +11,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import moment from "moment";
 import "moment/locale/ru";
 
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.min.css";
-import { ru } from "date-fns/esm/locale";
-registerLocale("ru", ru);
-setDefaultLocale("ru");
-
 // correct fonts import for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -585,16 +579,7 @@ class Calculator extends React.Component {
           <div className="output-field">
             <div className="output-field__description">
               График возврата займа от&nbsp;
-              <DatePicker
-                selected={this.state.startDate._d}
-                onChange={this.handleDateChange}
-                dateFormat="d MMMM yyyy"
-                fixedHeight
-                showYearDropdown
-                yearDropdownItemNumber={1}
-                showYearSelectOnly
-                customInput={<DateInput />}
-              />
+              <DateInput onDateChange={this.handleDateChange} />
               <GeneratePdfButton onClick={this.generatePdf} />
             </div>
           </div>

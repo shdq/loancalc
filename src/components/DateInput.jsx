@@ -1,22 +1,18 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as React from "react";
+import { Datepicker } from "baseui/datepicker";
+import ru from "date-fns/locale/ru";
 
-class DateInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
-  }
-  onClick(e) {
-    this.props.onValueChange(e.target.value);
-  }
-  render() {
-    return (
-      <button className="date-picker-button" onClick={this.props.onClick}>
-        {this.props.value}&nbsp;
-        <FontAwesomeIcon icon="caret-down" />
-      </button>
-    );
-  }
-}
-
-export default DateInput;
+export default ({ onDateChange }) => {
+  const [singleDate, setSingleDate] = React.useState(Date.now());
+  return (
+    <Datepicker
+      locale={ru}
+      formatString={"dd.MM.yyyy"}
+      value={singleDate}
+      onChange={({ date }) => {
+        setSingleDate(date);
+        onDateChange(date);
+      }}
+    />
+  );
+};

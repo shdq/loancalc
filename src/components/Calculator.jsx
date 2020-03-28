@@ -71,11 +71,26 @@ class Calculator extends React.Component {
   }
 
   handleSumChange(loanSum) {
+    let minValue, maxValue;
+    switch (this.state.selectedValue) {
+      case "express":
+        minValue = 30000;
+        maxValue = 100000;
+        break;
+      case "covid":
+        minValue = 50000;
+        maxValue = 500000;
+        break;
+      default:
+        minValue = 50000;
+        maxValue = 5000000;
+    }
+
     this.setState({
       loanSum: {
         value: loanSum,
-        minValue: this.state.selectedValue === "express" ? 30000 : 50000,
-        maxValue: this.state.selectedValue === "express" ? 100000 : 5000000
+        minValue: minValue,
+        maxValue: maxValue
       }
     });
     this.Calculate(
@@ -133,10 +148,21 @@ class Calculator extends React.Component {
   }
 
   handleRadioChange(value) {
-    let minLoanSum;
-    value === "express" ? (minLoanSum = 30000) : (minLoanSum = 50000);
-    let maxLoanSum;
-    value === "express" ? (maxLoanSum = 100000) : (maxLoanSum = 5000000);
+    let minLoanSum, maxLoanSum;
+    switch (value) {
+      case "express":
+        minLoanSum = 30000;
+        maxLoanSum = 100000;
+        break;
+      case "covid":
+        minLoanSum = 50000;
+        maxLoanSum = 500000;
+        break;
+      default:
+        minLoanSum = 50000;
+        maxLoanSum = 5000000;
+    }
+
     let loanSum = this.state.loanSum.value;
     if (loanSum < minLoanSum) loanSum = minLoanSum;
     if (value !== "express" && loanSum < minLoanSum + 50000)
@@ -159,6 +185,19 @@ class Calculator extends React.Component {
         }
       }
       graceMaxValue = loanTerm - 1;
+    }
+    // COVID PROGRAM
+    if (value === "covid") {
+      interestRate = 0.01;
+      maxLoanTerm = 12;
+      if (loanTerm > 12) {
+        loanTerm = 12;
+        if (graceValue > 11) {
+          graceValue = 11;
+        }
+      }
+      graceMaxValue = loanTerm - 1;
+      if (loanSum > maxLoanSum) loanSum = maxLoanSum;
     }
     if (value === "express") {
       interestRate = keyInterestRate;
@@ -490,6 +529,15 @@ class Calculator extends React.Component {
               selectedValue={this.state.selectedValue}
               onChange={this.handleRadioChange}
             >
+              <label className="interest-rate-radio__label">
+                <Radio
+                  className="interest-rate-radio__input"
+                  checked={this.state.selectedValue === "covid"}
+                  value="covid"
+                />
+                «Антикризисная»
+                <span className="interest-rate-radio__checkmark" />
+              </label>
               <label className="interest-rate-radio__label">
                 <Radio
                   className="interest-rate-radio__input"

@@ -496,7 +496,7 @@ class Calculator extends React.Component {
                   checked={this.state.selectedValue === "0"}
                   value="0"
                 />
-                «Стандарт»
+                «Стандарт», «Рефинансирование»
                 <span className="interest-rate-radio__checkmark" />
               </label>
               <label className="interest-rate-radio__label">
@@ -544,7 +544,7 @@ class Calculator extends React.Component {
                   checked={this.state.selectedValue === "0.25"}
                   value="0.25"
                 />
-                «Лизинг», «Местный товаропроизводитель», «Сельский туризм»
+                «Лизинг», «Местный товаропроизводитель», «Туризм»
                 <span className="interest-rate-radio__checkmark" />
               </label>
               <label className="interest-rate-radio__label">

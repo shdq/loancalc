@@ -2,34 +2,35 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 .calculator {
   font-family: 'Open Sans', sans-serif;
+  color: #595959;
   font-size: 16px;
   width: 100%;
 }
 .input-group {
   padding: 0 10px;
 }
-.output-group {}
+/* .output-group {} */
 
 /* InputRange component */
-.input-field {}
-.input-field__description {}
+/* .input-field {}
+.input-field__description {} */
 .input-field__range-value {
   font-size: 22px;
 }
-.input-field__range {}
+/* .input-field__range {}
 .input-field__label {}
 .input-field__label-value {}
-.input-field__label-value_min {}
+.input-field__label-value_min {} */
 .input-field__label-value_max {
   float: right;
 }
 /* InterestRateInput component */
-.interest-rate {}
+/* .interest-rate {}
 .interest-rate__checkbox {}
-.interest-rate__label {}
+.interest-rate__label {} */
 
 /* interest rate radio */
-.interest-rate-radio {}
+/* .interest-rate-radio {} */
 .interest-rate-radio__label {
     display: inline-block;
     position: relative;
@@ -103,8 +104,8 @@
 }
 
 /* OutputEntity component */
-.output-field {}
-.output-field__description {}
+/* .output-field {}
+.output-field__description {} */
 .output-field__value {
   font-size: 22px;
 }
@@ -290,6 +291,7 @@ input[type="checkbox"]:checked + label:before {
     padding: 10px;
     /* padding-left: 40px; */
     outline: none;
+    color: #595959;
 }
 
 .download-button {

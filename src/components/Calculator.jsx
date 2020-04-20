@@ -46,17 +46,17 @@ class Calculator extends React.Component {
       loanSum: {
         value: 500000,
         minValue: 50000,
-        maxValue: 5000000
+        maxValue: 5000000,
       },
       loanTerm: {
         value: 36,
         minValue: 3,
-        maxValue: 36
+        maxValue: 36,
       },
       gracePeriod: {
         value: 0,
         minValue: 0,
-        maxValue: 35
+        maxValue: 35,
       },
       interestRate: keyInterestRate,
       selectedValue: "0", // default reduction factor
@@ -65,8 +65,8 @@ class Calculator extends React.Component {
         monthlyPayment: 15553.11,
         gracePeriod: 0,
         // gracePayment: 3020.83,
-        requirements: "Поручительства физических или юридических лиц"
-      }
+        requirements: "Поручительства физических или юридических лиц",
+      },
     };
   }
 
@@ -90,8 +90,8 @@ class Calculator extends React.Component {
       loanSum: {
         value: loanSum,
         minValue: minValue,
-        maxValue: maxValue
-      }
+        maxValue: maxValue,
+      },
     });
     this.Calculate(
       this.state.interestRate,
@@ -115,13 +115,13 @@ class Calculator extends React.Component {
       loanTerm: {
         value: loanTerm,
         minValue: 3,
-        maxValue: this.state.loanTerm.maxValue
+        maxValue: this.state.loanTerm.maxValue,
       },
       gracePeriod: {
         value: graceValue,
         minValue: 0,
-        maxValue: graceMaxValue
-      }
+        maxValue: graceMaxValue,
+      },
     });
     this.Calculate(
       this.state.interestRate,
@@ -136,8 +136,8 @@ class Calculator extends React.Component {
       gracePeriod: {
         value: gracePeriod,
         minValue: 0,
-        maxValue: this.state.gracePeriod.maxValue
-      }
+        maxValue: this.state.gracePeriod.maxValue,
+      },
     });
     this.Calculate(
       this.state.interestRate,
@@ -188,12 +188,12 @@ class Calculator extends React.Component {
     }
     // COVID PROGRAM
     if (value === "covid") {
-      interestRate = 0.01;
-      maxLoanTerm = 12;
-      if (loanTerm > 12) {
-        loanTerm = 12;
-        if (graceValue > 11) {
-          graceValue = 11;
+      interestRate = 1;
+      maxLoanTerm = 24;
+      if (loanTerm > 24) {
+        loanTerm = 24;
+        if (graceValue > 23) {
+          graceValue = 23;
         }
       }
       graceMaxValue = loanTerm - 1;
@@ -218,23 +218,23 @@ class Calculator extends React.Component {
       loanTerm: {
         value: loanTerm,
         minValue: 3,
-        maxValue: maxLoanTerm
+        maxValue: maxLoanTerm,
       },
       gracePeriod: {
         value: graceValue,
         minValue: 0,
-        maxValue: graceMaxValue
+        maxValue: graceMaxValue,
       },
       loanSum: {
         value: loanSum,
         minValue: minLoanSum,
-        maxValue: maxLoanSum
-      }
+        maxValue: maxLoanSum,
+      },
     });
     this.Calculate(interestRate, loanSum, loanTerm, graceValue);
   }
 
-  roundHelper = number => Math.round(number * 100) / 100;
+  roundHelper = (number) => Math.round(number * 100) / 100;
 
   constructRow = (
     number,
@@ -255,7 +255,7 @@ class Calculator extends React.Component {
       { text: this.roundHelper(monthlyInterest), alignment: "right" },
       gracePeriod > 0
         ? { text: "–", alignment: "right" }
-        : { text: this.roundHelper(monthlyDebtPayment), alignment: "right" }
+        : { text: this.roundHelper(monthlyDebtPayment), alignment: "right" },
     ];
   };
 
@@ -326,7 +326,7 @@ class Calculator extends React.Component {
             "D MMMM YYYY"
           )} г. *\n\n`,
           fontSize: 18,
-          color: "#0a6586"
+          color: "#0a6586",
         },
         { text: "Условия микрозайма:", bold: true },
         { text: `Сумма займа: ${this.state.loanSum.value} руб.` },
@@ -336,12 +336,12 @@ class Calculator extends React.Component {
             this.state.gracePeriod.value > 0
               ? `Льготный период: ${this.state.gracePeriod.value} мес.`
               : ``
-          }`
+          }`,
         },
         {
           text: `Годовая ставка: ${Number(
             this.state.interestRate
-          ).toLocaleString("ru-RU")}%\n\n`
+          ).toLocaleString("ru-RU")}%\n\n`,
         },
         {
           table: {
@@ -357,27 +357,27 @@ class Calculator extends React.Component {
                   rowSpan: 2,
                   text: "Дата платежа",
                   alignment: "left",
-                  bold: true
+                  bold: true,
                 },
                 {
                   rowSpan: 2,
                   text: "Остаток долга на начало месяца, руб.",
                   alignment: "right",
-                  bold: true
+                  bold: true,
                 },
                 {
                   rowSpan: 2,
                   text: "Ежемесячная срочная уплата, руб.",
                   alignment: "right",
-                  bold: true
+                  bold: true,
                 },
                 {
                   text: "В том числе:",
                   colSpan: 2,
                   alignment: "center",
-                  bold: true
+                  bold: true,
                 },
-                {}
+                {},
               ],
               [
                 {},
@@ -387,13 +387,13 @@ class Calculator extends React.Component {
                 {
                   text: "На выплату процентов, руб.",
                   alignment: "right",
-                  bold: true
+                  bold: true,
                 },
                 {
                   text: "На погашение долга, руб.",
                   alignment: "right",
-                  bold: true
-                }
+                  bold: true,
+                },
               ],
               ...rows,
               [
@@ -403,35 +403,35 @@ class Calculator extends React.Component {
                 {
                   text: this.roundHelper(totalPayments),
                   alignment: "right",
-                  bold: true
+                  bold: true,
                 },
                 {
                   text: this.roundHelper(
                     totalPayments - this.state.loanSum.value
                   ),
                   alignment: "right",
-                  bold: true
+                  bold: true,
                 },
                 {
                   text: this.state.loanSum.value,
                   alignment: "right",
-                  bold: true
-                }
-              ]
-            ]
-          }
+                  bold: true,
+                },
+              ],
+            ],
+          },
         },
         {
           text:
-            "\n* Не является приложением к договору, расчет предварительный."
+            "\n* Не является приложением к договору, расчет предварительный.",
         },
         {
           text: "\n\nhttps://cmf29.ru/kalkulator",
           alignment: "right",
           bold: true,
-          color: "#0a6586"
-        }
-      ]
+          color: "#0a6586",
+        },
+      ],
     };
     pdfMake
       .createPdf(docDefinition)
@@ -440,7 +440,7 @@ class Calculator extends React.Component {
 
   handleDateChange(date) {
     this.setState({
-      startDate: moment(date)
+      startDate: moment(date),
     });
   }
 
@@ -472,8 +472,8 @@ class Calculator extends React.Component {
         monthlyPayment: monthlyPayment,
         gracePeriod: grace,
         gracePayment: gracePayment,
-        requirements: requirements
-      }
+        requirements: requirements,
+      },
     });
   }
 
@@ -595,7 +595,7 @@ class Calculator extends React.Component {
                 «Лизинг», «Местный товаропроизводитель», «Туризм»
                 <span className="interest-rate-radio__checkmark" />
               </label>
-              <label className="interest-rate-radio__label">
+              {/* <label className="interest-rate-radio__label">
                 <Radio
                   className="interest-rate-radio__input"
                   checked={this.state.selectedValue === "s+"}
@@ -603,7 +603,7 @@ class Calculator extends React.Component {
                 />
                 «Startup+»
                 <span className="interest-rate-radio__checkmark" />
-              </label>
+              </label> */}
             </RadioGroup>
           </div>
         </div>

@@ -20,14 +20,12 @@ setDefaultLocale("ru");
 // correct fonts import for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-// const element = document.getElementsByClassName("key-interest-rate__value");
-// let keyInterestRate = element[0].dataset.value;
-// if (isNaN(keyInterestRate)) {
-//   keyInterestRate = 8;
-//   console.error("Key interest rate is not a number");
-// }
-
-const keyInterestRate = 6;
+const element = document.getElementsByClassName("key-interest-rate__value");
+let keyInterestRate = element[0].dataset.value;
+if (isNaN(keyInterestRate)) {
+  keyInterestRate = 8;
+  console.error("Key interest rate is not a number");
+}
 
 class Calculator extends React.Component {
   constructor(props) {

@@ -310,7 +310,7 @@ class Calculator extends React.Component {
     let totalPayments;
     this.state.gracePeriod.value > 0
       ? (totalPayments =
-          this.state.gracePeriod.value * this.state.outputData.gracePeriod +
+          this.state.gracePeriod.value * this.state.outputData.gracePayment +
           this.state.outputData.monthlyPayment *
             (this.state.loanTerm.value - this.state.gracePeriod.value))
       : (totalPayments =

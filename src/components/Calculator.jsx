@@ -583,7 +583,7 @@ class Calculator extends React.Component {
                   checked={this.state.selectedValue === "1.5"}
                   value="1.5"
                 />
-                «Рециклинг»
+                «Рециклинг», «Социальное предпринимательство»
                 <span className="interest-rate-radio__checkmark" />
               </label>
               <label className="interest-rate-radio__label">
